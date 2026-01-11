@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Task Manager</h1>
+
+    <h2>Assign New Task</h2>
+    <form action="{{ url_for('add_task') }}" method="POST">
+        <div class="form-group">
+            <label for="description">Task Description</label>
+            <input type="text" id="description" name="description" required placeholder="e.g., Pour foundation">
+        </div>
+        <div class="form-group">
+            <label for="assigned_to">Assigned To</label>
+            <input type="text" id="assigned_to" name="assigned_to" required placeholder="e.g., John Doe">
+        </div>
+        <button type="submit">Assign Task</button>
+    </form>
+
+    <h2>Task List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Assigned To</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.assigned_to }}</td>
+                <td>
+                    {% if task.status == 'Completed' %}
+                        <span class="status-completed">Completed</span>
+                    {% else %}
+                        {{ task.status }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.status != 'Completed' %}
+                        <a href="{{ url_for('complete_task', id=task.id) }}" class="btn-complete">Mark Complete</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No tasks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
